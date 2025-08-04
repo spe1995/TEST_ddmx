@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>任务分发</title>
+</head>
+<body>
+    <h2>任务分发</h2>
+    {% if message %}<p style="color:green;">{{ message }}</p>{% endif %}
+    <form method="post">
+        <label>链接地址（每行一个）：</label><br>
+        <textarea name="links" rows="6" cols="60"></textarea><br>
+        <label>选择服务器：</label><br>
+        {% for name, url in servers.items() %}
+            <label><input type="checkbox" name="servers" value="{{ url }}"> {{ name }}</label><br>
+        {% endfor %}
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>
