@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <title>任务分发</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center justify-content-center">
+  <a href="#" id="change-bg" class="position-absolute top-0 end-0 m-3 text-white">更换底图</a>
+  <div class="card p-4 shadow-lg" style="width:100%;max-width:800px;">
+    <h2 class="mb-4 text-center">任务分发</h2>
+    {% if message %}<div class="alert text-center">{{ message }}</div>{% endif %}
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">链接地址（每行一个）：</label>
+        <textarea name="links" rows="6" class="form-control" placeholder="https://example.com/a\nhttps://example.com/b"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">选择服务器：</label>
+        {% for name, url in servers.items() %}
+          <div class="form-check d-flex align-items-center mb-2">
+            <input class="form-check-input" type="checkbox" name="servers" value="{{ url }}" id="server{{ loop.index }}">
+            <label class="form-check-label me-2" for="server{{ loop.index }}">{{ name }}</label>
+            <input type="number" class="form-control form-control-sm ms-2" name="threads{{ loop.index }}" min="1" value="1" placeholder="线程数" style="width:100px;">
+          </div>
+        {% endfor %}
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">提交</button>
+      </div>
+    </form>
+    {% if selected_info %}
+    <div class="mt-4">
+      <h5 class="text-center">任务状态</h5>
+      <table class="table table-dark table-striped">
+        <tbody>
+          {% for s in selected_info %}
+          <tr>
+            <td>{{ s.name }}</td>
+            <td id="status{{ s.id }}">查询中...</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+  <script>
+    const servers = {{ selected_info|tojson }};
+    if (servers.length > 0) {
+      function fetchStatus() {
+        fetch('{{ url_for('status') }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ servers })
+        }).then(r => r.json()).then(data => {
+          servers.forEach(s => {
+            const el = document.getElementById('status' + s.id);
+            if (el) el.textContent = data[s.name];
+          });
+        });
+      }
+      fetchStatus();
+      setInterval(fetchStatus, 5000);
+    }
+    document.getElementById('change-bg').addEventListener('click', function(e){
+      e.preventDefault();
+      const url = prompt('输入背景图片URL:');
+      if (url) {
+        document.body.style.backgroundImage = `url(${url})`;
+      }
+    });
+  </script>
+</body>
+</html>
