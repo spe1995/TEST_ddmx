@@ -19,9 +19,10 @@
       <div class="mb-3">
         <label class="form-label">选择服务器：</label>
         {% for name, url in servers.items() %}
-          <div class="form-check">
+          <div class="form-check d-flex align-items-center mb-2">
             <input class="form-check-input" type="checkbox" name="servers" value="{{ url }}" id="server{{ loop.index }}">
-            <label class="form-check-label" for="server{{ loop.index }}">{{ name }}</label>
+            <label class="form-check-label me-2" for="server{{ loop.index }}">{{ name }}</label>
+            <input type="number" class="form-control form-control-sm ms-2" name="threads{{ loop.index }}" min="1" value="1" placeholder="线程数" style="width:100px;">
           </div>
         {% endfor %}
       </div>

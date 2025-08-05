@@ -29,13 +29,21 @@ def index():
     if request.method == 'POST':
         links = [line.strip() for line in request.form.get('links', '').splitlines() if line.strip()]
         selected_servers = request.form.getlist('servers')
-        for name, base_url in config.SERVERS.items():
+        for idx, (name, base_url) in enumerate(config.SERVERS.items(), start=1):
+            thread_str = request.form.get(f'threads{idx}', '1')
+            try:
+                threads = max(1, int(thread_str))
+            except ValueError:
+                threads = 1
             if base_url in selected_servers:
-                idx = len(selected_info) + 1
                 selected_info.append({'id': idx, 'name': name, 'url': base_url})
                 for link in links:
                     try:
-                        requests.post(base_url.rstrip('/') + '/task', json={'link': link}, timeout=5)
+                        requests.post(
+                            base_url.rstrip('/') + '/task',
+                            json={'link': link, 'threads': threads},
+                            timeout=5,
+                        )
                     except requests.RequestException:
                         pass
         message = '任务已分发'
