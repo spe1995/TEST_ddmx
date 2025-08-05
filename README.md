@@ -9,6 +9,9 @@
 3. 浏览器访问 `http://localhost:5000`，输入密码后即可操作。
 
 可通过环境变量 `PASSWORD_HASH` 和 `SECRET_KEY` 提升安全性，服务器地址在 `config.py` 中配置（基础地址，自动调用 `/task` 与 `/status`）。
+<img width="929" height="590" alt="image" src="https://github.com/user-attachments/assets/f99b7275-50be-4c84-ab23-fa2282e94938" />
+
+<img width="1272" height="1041" alt="image" src="https://github.com/user-attachments/assets/b90ba97b-0c2f-47a6-af23-a41e5337a79d" />
 
 ## 服务器端脚本
 
