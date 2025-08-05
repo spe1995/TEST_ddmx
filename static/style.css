@@ -1,5 +1,8 @@
 body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   min-height: 100vh;
   color: #fff;
   font-family: 'Segoe UI', Arial, sans-serif;

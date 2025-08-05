@@ -7,6 +7,7 @@
   <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body class="d-flex align-items-center justify-content-center">
+  <a href="#" id="change-bg" class="position-absolute top-0 end-0 m-3 text-white">更换底图</a>
   <div class="card p-4 shadow-lg" style="width:100%;max-width:800px;">
     <h2 class="mb-4 text-center">任务分发</h2>
     {% if message %}<div class="alert text-center">{{ message }}</div>{% endif %}
@@ -28,6 +29,47 @@
         <button type="submit" class="btn btn-primary">提交</button>
       </div>
     </form>
+    {% if selected_info %}
+    <div class="mt-4">
+      <h5 class="text-center">任务状态</h5>
+      <table class="table table-dark table-striped">
+        <tbody>
+          {% for s in selected_info %}
+          <tr>
+            <td>{{ s.name }}</td>
+            <td id="status{{ s.id }}">查询中...</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
   </div>
+  <script>
+    const servers = {{ selected_info|tojson }};
+    if (servers.length > 0) {
+      function fetchStatus() {
+        fetch('{{ url_for('status') }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ servers })
+        }).then(r => r.json()).then(data => {
+          servers.forEach(s => {
+            const el = document.getElementById('status' + s.id);
+            if (el) el.textContent = data[s.name];
+          });
+        });
+      }
+      fetchStatus();
+      setInterval(fetchStatus, 5000);
+    }
+    document.getElementById('change-bg').addEventListener('click', function(e){
+      e.preventDefault();
+      const url = prompt('输入背景图片URL:');
+      if (url) {
+        document.body.style.backgroundImage = `url(${url})`;
+      }
+    });
+  </script>
 </body>
 </html>
