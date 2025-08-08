@@ -84,10 +84,7 @@ def index():
 
     max_concurrency = config.DEFAULT_MAX_CONCURRENCY
     max_duration = config.DEFAULT_MAX_DURATION
-    layer_methods = {
-        'L4': ['syn', 'udp'],
-        'L7': ['http', 'https']
-    }
+    layer_methods = config.LAYER_METHODS
     message = None
     if request.method == 'POST':
         targets = [t.strip() for t in request.form.get('targets', '').splitlines() if t.strip()]
@@ -99,6 +96,8 @@ def index():
             flash('目标地址不能为空')
         elif layer not in layer_methods:
             flash('攻击层级无效')
+        elif method not in layer_methods.get(layer, []):
+            flash('攻击方法无效')
         else:
             tid = str(uuid.uuid4())[:8]
             task = {

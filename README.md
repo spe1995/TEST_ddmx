@@ -19,6 +19,8 @@
    - 管理员密码：`admin123`
 4. 子服务器可运行 `worker.py`，并通过设置 `MANAGER_URL` 环境变量自动向管理端注册。
 
+攻击层级与方法绑定关系可在 `config.py` 的 `LAYER_METHODS` 中自定义。
+
 ## 服务器端脚本 `worker.py`
 
 1. 安装依赖：`pip install Flask requests`

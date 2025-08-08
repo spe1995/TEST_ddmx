@@ -18,3 +18,9 @@ INIT_SERVERS = [
     {'id': 's1', 'ip': '127.0.0.1', 'group': 'L4', 'max': 50, 'status': 'online'},
     {'id': 's2', 'ip': '127.0.0.1', 'group': 'L7', 'max': 50, 'status': 'online'},
 ]
+
+# 各层级对应的攻击方法列表
+LAYER_METHODS = {
+    'L4': ['syn', 'udp'],
+    'L7': ['http', 'https']
+}
